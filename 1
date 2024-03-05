@@ -1,0 +1,57 @@
+#include <iostream>
+#include <algorithm>
+#include <cstdlib>
+#include <ctime>
+#include <vector>
+
+using namespace std;
+
+const int matrixSize = 6;
+
+void MatrixRandom(int arr[matrixSize][matrixSize]) {
+    srand(time(0));
+
+    for (int i = 0; i < matrixSize; ++i)
+        for (int j = 0; j < matrixSize; ++j)
+            arr[i][j] = rand() % 100;
+}
+
+void printSortedDiagonal(const int arr[matrixSize][matrixSize]) {
+    vector<int> diagonalValues;
+
+    for (int i = 0; i < matrixSize; ++i)
+        diagonalValues.push_back(arr[i][i]);
+
+    sort(diagonalValues.rbegin(), diagonalValues.rend());
+
+    cout << "Sorted diagonal values:\n";
+    for (const int& value : diagonalValues)
+        cout << value << " ";
+    cout << endl;
+}
+
+void shellSortDiagonal(int arr[matrixSize][matrixSize]) {
+    for (int gap = matrixSize / 2; gap > 0; gap /= 2)
+        for (int i = gap; i < matrixSize; ++i)
+            for (int j = i - gap; j >= 0 && arr[j][j] < arr[j + gap][j + gap]; j -= gap)
+                swap(arr[j][j], arr[j + gap][j + gap]);
+}
+
+int main() {
+    int matrix[matrixSize][matrixSize];
+
+    MatrixRandom(matrix);
+
+    cout << "Original matrix:\n";
+    for (int i = 0; i < matrixSize; ++i) {
+        for (int j = 0; j < matrixSize; ++j)
+            cout << matrix[i][j] << " ";
+        cout << endl;
+    }
+
+    shellSortDiagonal(matrix);
+    printSortedDiagonal(matrix);
+
+    return 0;
+}
+
